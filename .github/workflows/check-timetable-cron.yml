@@ -30,8 +30,3 @@ jobs:
     - name: Run renfe-cli
       run: |
         renfe-cli -d 1 -o MADRI -t BARCE
-    - name: Test with pytest
-      run: |
-        python -m pytest --junitxml=tests.xml -o junit_family=xunit2 --cov-report term-missing --cov-report xml --cov=src -o testpaths=tests
-      env:
-        PYTHONPATH: "src"
