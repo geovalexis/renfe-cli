@@ -163,19 +163,17 @@ def get_date(days_from_today: int) -> str:
     return f"{day.year}-{day.month}-{day.day}"
 
 
-def get_prices(soup) -> List[str]:
+def get_prices(soup) -> List[List[str]]:
     prices = []
     attrs_trip = {"class": re.compile("trayectoRow\w*")}
     trips = soup.find_all("tr", attrs=attrs_trip)
     for trip in trips:
         attrs_price = {"class":"precio booking-list-element-big-font"}
         price = trip.find_all("div", attrs=attrs_price)
-        if len(price)>1:
-            price = " - ".join([p.get_text() for p in price])
-        elif len(price)==1:
-            price = price[0].get_text()
+        if len(price)>0:
+            price = [p.get_text() for p in price]
         else:
             attrs_train_status = {"class": re.compile("booking-list-element-price\w*")}
-            price = trip.find_all("td", attrs=attrs_train_status)[0].get_text().strip("\n").strip()
+            price = [trip.find_all("td", attrs=attrs_train_status)[0].get_text().strip("\n").strip()]
         prices.append(price)
     return prices

@@ -36,14 +36,14 @@ def main():
                 int(options.days),
                 options.browser,
                 int(options.search_timeout))
-            print(colorama.Fore.GREEN + "=======================TIMETABLE======================")
-            print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<10} ".format(
-                'Train', 'Departure', 'Arrival', 'Duration'))
+            print(colorama.Fore.GREEN + "=================================TIMETABLE================================")
+            print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<12} | {:<10}".format(
+                'Train', 'Departure', 'Arrival', 'Duration', "Prices"))
 
             for time in times:
                 print(colorama.Fore.GREEN + "--------------------------------------------------------------------------")
                 print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<12} | {:<10} ".format(
-                    time[0], time[1], time[2], time[3], time[4]))
+                    time[0], time[1], time[2], time[3], " - ".join(time[4])))
             print(colorama.Fore.GREEN + "==========================================================================" + colorama.Fore.RESET)
 
             if not times:
