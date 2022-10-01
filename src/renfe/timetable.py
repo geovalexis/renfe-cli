@@ -1,7 +1,7 @@
 import os
 import re
 from datetime import datetime, timedelta
-from typing import List, Set, Union
+from typing import List, Union
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from time import sleep
@@ -17,7 +17,7 @@ def get_timetable(
         destination: str,
         days_from_today: int = 0,
         browser: str = "firefox",
-        search_timeout: int = 3) -> List[Set]:
+        search_timeout: int = 3) -> List[dict]:
     soup = get_soup(browser, origin, destination, days_from_today, search_timeout)
     types = get_types(soup)
     durations = get_durations(soup)
@@ -25,7 +25,10 @@ def get_timetable(
     arrivals = get_arrivals(soup)
     prices = get_prices(soup)
 
-    return list(zip(types, departures, arrivals, durations, prices))
+    return [
+        {"type": t, "departure": de, "arrival": a, "duration": du, "price": p}
+        for t, de, a, du, p in zip(types, departures, arrivals, durations, prices)
+    ]
 
 
 def get_browser(type: str) -> Union[Firefox, Chrome]:
