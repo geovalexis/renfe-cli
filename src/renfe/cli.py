@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import json
 import logging
 import colorama
 from datetime import date
@@ -36,14 +37,14 @@ def main():
                 int(options.days),
                 options.browser,
                 int(options.search_timeout))
-            print(colorama.Fore.GREEN + "=======================TIMETABLE======================")
-            print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<10} ".format(
-                'Train', 'Departure', 'Arrival', 'Duration'))
+            print(colorama.Fore.GREEN + "=================================TIMETABLE================================")
+            print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<12} | {:<10}".format(
+                'Train', 'Departure', 'Arrival', 'Duration', "Prices"))
 
             for time in times:
                 print(colorama.Fore.GREEN + "--------------------------------------------------------------------------")
                 print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<12} | {:<10} ".format(
-                    time[0], time[1], time[2], time[3], time[4]))
+                    time["type"], time["departure"], time["arrival"], time["duration"],  " - ".join(time["price"])))
             print(colorama.Fore.GREEN + "==========================================================================" + colorama.Fore.RESET)
 
             if not times:
@@ -51,6 +52,10 @@ def main():
                     Maybe no more trains for today? \
                     Also, try increasing search timeout (-e flag, see help). \
                     Please, open an issue if problem does persist." + colorama.Fore.RESET)
+
+            if options.output:
+                with open(options.output, 'w') as f:
+                    json.dump(times, f, ensure_ascii=False, indent=4)
 
         except (RenfeException, ValueError) as err:
             logging.error(err)

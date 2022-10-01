@@ -1,7 +1,7 @@
 import os
 import re
 from datetime import datetime, timedelta
-from typing import List, Set, Union
+from typing import List, Union
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from time import sleep
@@ -17,7 +17,7 @@ def get_timetable(
         destination: str,
         days_from_today: int = 0,
         browser: str = "firefox",
-        search_timeout: int = 3) -> List[Set]:
+        search_timeout: int = 3) -> List[dict]:
     soup = get_soup(browser, origin, destination, days_from_today, search_timeout)
     types = get_types(soup)
     durations = get_durations(soup)
@@ -25,7 +25,10 @@ def get_timetable(
     arrivals = get_arrivals(soup)
     prices = get_prices(soup)
 
-    return list(zip(types, departures, arrivals, durations, prices))
+    return [
+        {"type": t, "departure": de, "arrival": a, "duration": du, "price": p}
+        for t, de, a, du, p in zip(types, departures, arrivals, durations, prices)
+    ]
 
 
 def get_browser(type: str) -> Union[Firefox, Chrome]:
@@ -163,19 +166,17 @@ def get_date(days_from_today: int) -> str:
     return f"{day.year}-{day.month}-{day.day}"
 
 
-def get_prices(soup) -> List[str]:
+def get_prices(soup) -> List[List[str]]:
     prices = []
     attrs_trip = {"class": re.compile("trayectoRow\w*")}
     trips = soup.find_all("tr", attrs=attrs_trip)
     for trip in trips:
         attrs_price = {"class":"precio booking-list-element-big-font"}
         price = trip.find_all("div", attrs=attrs_price)
-        if len(price)>1:
-            price = " - ".join([p.get_text() for p in price])
-        elif len(price)==1:
-            price = price[0].get_text()
+        if len(price)>0:
+            price = [p.get_text() for p in price]
         else:
             attrs_train_status = {"class": re.compile("booking-list-element-price\w*")}
-            price = trip.find_all("td", attrs=attrs_train_status)[0].get_text().strip("\n").strip()
+            price = [trip.find_all("td", attrs=attrs_train_status)[0].get_text().strip("\n").strip()]
         prices.append(price)
     return prices
