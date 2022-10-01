@@ -14,19 +14,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]
+        days: [1]
+        origin: [MADRI]
+        destination: [BARCE]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.8
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.8
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         python setup.py install
     - name: Run renfe-cli
       run: |
-        renfe-cli -d 1 -o MADRI -t BARCE
+        renfe-cli -d ${{ matrix.days }} -o ${{ matrix.origin}} -t ${{ matrix.destination }}
