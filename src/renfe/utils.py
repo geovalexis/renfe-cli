@@ -98,6 +98,8 @@ def parse_args(config):
                  help='logging file name is required if you want to submit an issue with more information')
     p.add_option('--update-config', '-u', default=False, action='store_true', dest='update_config',
                  help='change your origin and destination stations to defaults when loading this flag')
+    p.add_option('--output', '--out', default=None, type=str,
+                 help='name of the file to save the results to (it would be saved in JSON format)')           
     options, _ = p.parse_args()
 
     return options
