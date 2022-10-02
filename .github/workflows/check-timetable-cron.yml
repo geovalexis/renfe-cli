@@ -16,15 +16,9 @@ jobs:
       matrix:
         toemail: ["geovannyalexanderr@gmail.com", "anna.samarra@gmail.com"]
         include:
-          - days: "2022-10-03"
-            origin: VALEN
-            destination: BARCE        
-          - days: "2022-12-16"
+          - date: "2022-10-03"
             origin: VALEN
             destination: BARCE
-          - days: "2022-12-21"
-            origin: BARCE
-            destination: 11208
 
     steps:
     - name: Checkout repository
@@ -38,19 +32,20 @@ jobs:
         python -m pip install --upgrade pip
         python setup.py install
     - name: Run renfe-cli
+      id: running
       run: |
-        renfe-cli --date ${{ matrix.days }} -o ${{ matrix.origin}} -t ${{ matrix.destination }} --output timetable.json
+        renfe-cli --date ${{ matrix.date }} -o ${{ matrix.origin}} -t ${{ matrix.destination }} --output timetable.json
         echo "::set-output name=timetable::$(cat timetable.json)"
     - name: Send email if timetable is not empty
-      if: fromJSON(steps.get_timetable.outputs.timetable).length > 0
+      if: ${{ steps.running.outputs.timetable != '[]'}}
       env:
         SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
         SENDGRIP_TEMPLATE_ID: ${{ secrets.SENDGRIP_TEMPLATE_ID }}
         SENDGRIP_FROM_EMAIL: "geovannyalexanderr@gmail.com"
       run: |
         curl -X "POST" "https://api.sendgrid.com/v3/mail/send" \
-          -H 'Authorization: Bearer $SENDGRID_API_KEY' \
-          -H 'Content-Type: application/json' \
+          -H "Authorization: Bearer $SENDGRID_API_KEY" \
+          -H "Content-Type: application/json" \
           -d '{
                 "from": {
                     "email": "$SENDGRIP_FROM_EMAIL"
@@ -62,7 +57,7 @@ jobs:
                     "dynamic_template_data": {
                         "origin": "${{ matrix.origin }}",
                         "destination": "${{ matrix.destination }}",
-                        "date": "${{ matrix.days }}"
+                        "date": "${{ matrix.date }}"
                     }
                   }
                 ]
