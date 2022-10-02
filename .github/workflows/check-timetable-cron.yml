@@ -48,9 +48,9 @@ jobs:
           -H "Content-Type: application/json" \
           -d '{
                 "from": {
-                    "email": "$SENDGRID_FROM_EMAIL"
+                    "email": "'"$SENDGRID_FROM_EMAIL"'"
                 },
-                "template_id": "${SENDGRID_TEMPLATE_ID}",
+                "template_id": "'"$SENDGRID_TEMPLATE_ID"'",
                 "personalizations":[
                   {
                     "to":[{ "email":"${{ matrix.toemail }}"}],
