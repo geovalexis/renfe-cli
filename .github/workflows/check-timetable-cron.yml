@@ -14,9 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        days: [1]
-        origin: [MADRI]
-        destination: [BARCE]
+        include:
+          - days: "2022-12-16"
+            origin: VALEN
+            destination: BARCE
+          - days: "2022-12-21"
+            origin: BARCE
+            destination: 11208
 
     steps:
     - name: Checkout repository
@@ -31,4 +35,4 @@ jobs:
         python setup.py install
     - name: Run renfe-cli
       run: |
-        renfe-cli -d ${{ matrix.days }} -o ${{ matrix.origin}} -t ${{ matrix.destination }}
+        renfe-cli --date ${{ matrix.days }} -o ${{ matrix.origin}} -t ${{ matrix.destination }}
