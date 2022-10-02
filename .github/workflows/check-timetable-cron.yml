@@ -6,7 +6,7 @@ name: "Check timetable for a given route"
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '25 */12 * * *'
 
 jobs:
   get_timetable:
