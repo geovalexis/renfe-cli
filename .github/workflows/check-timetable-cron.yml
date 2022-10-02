@@ -40,17 +40,17 @@ jobs:
       if: ${{ steps.running.outputs.timetable != '[]'}}
       env:
         SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-        SENDGRIP_TEMPLATE_ID: ${{ secrets.SENDGRIP_TEMPLATE_ID }}
-        SENDGRIP_FROM_EMAIL: "geovannyalexanderr@gmail.com"
+        SENDGRID_TEMPLATE_ID: ${{ secrets.SENDGRID_TEMPLATE_ID }}
+        SENDGRID_FROM_EMAIL: "geovannyalexanderr@gmail.com"
       run: |
         curl -X "POST" "https://api.sendgrid.com/v3/mail/send" \
           -H "Authorization: Bearer $SENDGRID_API_KEY" \
           -H "Content-Type: application/json" \
           -d '{
                 "from": {
-                    "email": "$SENDGRIP_FROM_EMAIL"
+                    "email": "$SENDGRID_FROM_EMAIL"
                 },
-                "template_id": "$SENDGRIP_TEMPLATE_ID",
+                "template_id": "${SENDGRID_TEMPLATE_ID}",
                 "personalizations":[
                   {
                     "to":[{ "email":"${{ matrix.toemail }}"}],
