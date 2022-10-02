@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        toemail: ["geovannyalexanderr@gmail.com", "anna.samarra@gmail.com"]
         include:
           - days: "2022-12-16"
             origin: VALEN
@@ -35,4 +36,31 @@ jobs:
         python setup.py install
     - name: Run renfe-cli
       run: |
-        renfe-cli --date ${{ matrix.days }} -o ${{ matrix.origin}} -t ${{ matrix.destination }}
+        renfe-cli --date ${{ matrix.days }} -o ${{ matrix.origin}} -t ${{ matrix.destination }} --output timetable.json
+        echo "::set-output name=timetable::$(cat timetable.json)"
+    - name: Send email if timetable is not empty
+      if: fromJSON(steps.get_timetable.outputs.timetable).length > 0
+      env:
+        SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+        SENDGRIP_TEMPLATE_ID: ${{ secrets.SENDGRIP_TEMPLATE_ID }}
+        SENDGRIP_FROM_EMAIL: "geovannyalexanderr@gmail.com"
+      run: |
+        curl -X "POST" "https://api.sendgrid.com/v3/mail/send" \
+          -H 'Authorization: Bearer $SENDGRID_API_KEY' \
+          -H 'Content-Type: application/json' \
+          -d '{
+                "from": {
+                    "email": "$SENDGRIP_FROM_EMAIL"
+                },
+                "template_id": "$SENDGRIP_TEMPLATE_ID",
+                "personalizations":[
+                  {
+                    "to":[{ "email":"${{ matrix.toemail }}"}],
+                    "dynamic_template_data": {
+                        "origin": "${{ matrix.origin }}",
+                        "destination": "${{ matrix.destination }}",
+                        "date": "${{ matrix.days }}"
+                    }
+                  }
+                ]
+              }'
