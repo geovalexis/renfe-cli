@@ -14,11 +14,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        toemail: ["geovannyalexanderr@gmail.com", "anna.samarra@gmail.com"]
         include:
-          - date: "2022-10-03"
+          - date: "2022-12-16"
             origin: VALEN
             destination: BARCE
+            toemail: "anna.samarra@gmail.com"      
+          - date: "2022-12-16"
+            origin: VALEN
+            destination: BARCE
+            toemail: "geovannyalexanderr@gmail.com"
+          - date: "2022-12-21"
+            origin: BARCE
+            destination: 11208
+            toemail: "geovannyalexanderr@gmail.com"
 
     steps:
     - name: Checkout repository
