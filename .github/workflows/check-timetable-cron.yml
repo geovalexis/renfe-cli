@@ -16,6 +16,9 @@ jobs:
       matrix:
         toemail: ["geovannyalexanderr@gmail.com", "anna.samarra@gmail.com"]
         include:
+          - days: "2022-10-03"
+            origin: VALEN
+            destination: BARCE        
           - days: "2022-12-16"
             origin: VALEN
             destination: BARCE
