@@ -35,4 +35,4 @@ jobs:
         python setup.py install
     - name: Run renfe-cli
       run: |
-        renfe-cli -d ${{ matrix.days }} -o ${{ matrix.origin}} -t ${{ matrix.destination }}
+        renfe-cli --date ${{ matrix.days }} -o ${{ matrix.origin}} -t ${{ matrix.destination }}
