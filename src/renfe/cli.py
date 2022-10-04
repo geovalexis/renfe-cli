@@ -4,9 +4,9 @@ import logging
 import colorama
 from datetime import date
 
-from renfe.timetable import get_timetable, get_date
+from renfe.timetable import get_timetable, get_date, get_days
 from renfe.stations import get_station_and_key, station_exists, get_station_name
-from renfe.utils import RenfeException, ConfigurationMgmt, parse_args, get_days_from_today
+from renfe.utils import RenfeException, ConfigurationMgmt, parse_args
 
 
 def main():
@@ -28,10 +28,10 @@ def main():
         try:
             origin_name = get_station_name(options.origin)
             destination_name = get_station_name(options.to)
-            print(colorama.Fore.GREEN + f"Searching timetable for date: {get_date(int(options.days))}")
+            print(colorama.Fore.GREEN + f"Searching timetable for date: {options.date or get_date(int(options.days))}")
             print(colorama.Fore.GREEN + f"From {origin_name} to {destination_name}" + colorama.Fore.RESET)
             print(colorama.Fore.GREEN + "Be patient, navigating through renfe site now..." + colorama.Fore.RESET)
-            days = options.days or get_days_from_today(options.date)
+            days = options.days or get_days(options.date)
             times = get_timetable(
                 origin_name,
                 destination_name,

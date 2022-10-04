@@ -1,6 +1,6 @@
 import os
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 from typing import List, Union
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -164,6 +164,11 @@ def get_types(soup) -> List[str]:
 def get_date(days_from_today: int) -> str:
     day = datetime.today() + timedelta(days=days_from_today)
     return f"{day.year}-{day.month}-{day.day}"
+
+
+def get_days(date_iso: str) -> int:
+    date_obj = date.fromisoformat(date_iso)
+    return (date_obj - date.today()).days
 
 
 def get_prices(soup) -> List[List[str]]:

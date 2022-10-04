@@ -1,9 +1,8 @@
-import sys
-import os
 import json
 import logging
 import optparse
-from datetime import date
+import os
+import sys
 from pathlib import Path
 
 
@@ -85,9 +84,9 @@ def parse_args(config):
     p.add_option('--to', '-t', default=stations.get('to', '71802'),
                  help='to/destination ID of the train station. Use flag '
                       '\'-s <possible station name>\' in order to search for IDs')
-    p.add_option('--days', '-d', default=0, type=int,
+    p.add_option('--days', '-d', default=None, type=int,
                  help='number of days from today to get the timetable (default: 0 - today)')
-    p.add_option('--date', '--dt', default=date.today().isoformat(), type=str,
+    p.add_option('--date', '--dt', default=None, type=str,
                  help='date in ISO8601 format (YYYY-MM-DD)')
     p.add_option('--browser', '-b', default="firefox", help='possible browsers are "firefox" and "chrome" (default: firefox)')
     p.add_option('--search', '-s', default='',
@@ -106,12 +105,12 @@ def parse_args(config):
                  help='name of the file to save the results to (it would be saved in JSON format)')       
     options, _ = p.parse_args()
 
-    if (options.days != p.defaults["days"]) and (options.date != p.defaults["date"]):
+    if (options.days is None) and (options.date is None):
+        p.error("you should specify either the days to the trip or the date, at least one of them!")
+
+    if (options.days is not None) and (options.date is not None):
         p.error("you should specify either the days or the date, not both.")
+        
 
     return options
 
-
-def get_days_from_today(date_str: str) -> int:
-    date_obj = date.fromisoformat(date_str)
-    return (date_obj - date.today()).days
