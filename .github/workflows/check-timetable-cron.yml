@@ -15,14 +15,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - date: "2022-12-16"
-            origin: VALEN
-            destination: BARCE
-            toemail: "anna.samarra@gmail.com"      
-          - date: "2022-12-16"
-            origin: VALEN
-            destination: BARCE
-            toemail: "geovannyalexanderr@gmail.com"
           - date: "2022-12-21"
             origin: BARCE
             destination: 11208
