@@ -36,10 +36,9 @@ jobs:
       id: running
       run: |
         renfe-cli --date ${{ matrix.date }} -o ${{ matrix.origin}} -t ${{ matrix.destination }} --output timetable.json
-        echo "::set-output name=timetable::$(cat timetable.json)"
-        echo "::set-output name=num_trips::$(cat timetable.json | jq length)"
-    - name: Send email if timetable is not empty
-      if: ${{ steps.running.outputs.num_trips > matrix.minTrips }}
+        echo "NUM_TRIPS=$(cat timetable.json | jq length)" >> $GITHUB_OUTPUT
+    - name: Send email if condition is met
+      if: ${{ steps.running.outputs.num_trips >= matrix.minTrips }}
       env:
         SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
         SENDGRID_TEMPLATE_ID: ${{ secrets.SENDGRID_TEMPLATE_ID }}
