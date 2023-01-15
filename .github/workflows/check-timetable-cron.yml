@@ -16,7 +16,7 @@ jobs:
       matrix:
         include:
           - date: "2023-02-05"
-            origin: 04104 # CAMP DE TARRAGONA
+            origin: "04104" # CAMP DE TARRAGONA
             destination: VALEN
             toemail: "geovannyalexanderr@gmail.com"
             minTrips: 1
