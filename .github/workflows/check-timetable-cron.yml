@@ -12,13 +12,14 @@ jobs:
   get_timetable:
 
     runs-on: ubuntu-latest
-    # strategy:
-    #   matrix:
-    #     include:
-    #       - date: "2022-12-21"
-    #         origin: BARCE
-    #         destination: 11208
-    #         toemail: "geovannyalexanderr@gmail.com"
+    strategy:
+      matrix:
+        include:
+          - date: "2023-02-26"
+            origin: BARCE
+            destination: VALEN
+            toemail: "geovannyalexanderr@gmail.com"
+            minTrips: 2
 
     steps:
     - name: Checkout repository
@@ -35,9 +36,9 @@ jobs:
       id: running
       run: |
         renfe-cli --date ${{ matrix.date }} -o ${{ matrix.origin}} -t ${{ matrix.destination }} --output timetable.json
-        echo "::set-output name=timetable::$(cat timetable.json)"
-    - name: Send email if timetable is not empty
-      if: ${{ steps.running.outputs.timetable != '[]'}}
+        echo "NUM_TRIPS=$(cat timetable.json | jq length)" >> $GITHUB_OUTPUT
+    - name: Send email if condition is met
+      if: ${{ steps.running.outputs.num_trips >= matrix.minTrips }}
       env:
         SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
         SENDGRID_TEMPLATE_ID: ${{ secrets.SENDGRID_TEMPLATE_ID }}
