@@ -12,14 +12,14 @@ jobs:
   get_timetable:
 
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - date: "2023-02-26"
-            origin: BARCE
-            destination: VALEN
-            toemail: "geovannyalexanderr@gmail.com"
-            minTrips: 2
+    # strategy:
+    #   matrix:
+    #     include:
+    #       - date: "2023-02-26"
+    #         origin: BARCE
+    #         destination: VALEN
+    #         toemail: "geovannyalexanderr@gmail.com"
+    #         minTrips: 2
 
     steps:
     - name: Checkout repository
