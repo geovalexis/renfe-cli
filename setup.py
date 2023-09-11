@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 try:
     from pypandoc import convert_file
@@ -27,7 +27,8 @@ setup(
         'html5lib==1.1',
         'selenium==4.12.0',
         'webdriver-manager==4.0.0',
-        'requests==2.31.0'
+        'requests==2.31.0',
+        'colorama>=0.4.6,<1.0',
     ],
     entry_points="""
         [console_scripts]
