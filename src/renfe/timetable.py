@@ -37,17 +37,19 @@ def get_browser(type: str) -> Union[Firefox, Chrome]:
         if type == "firefox":
             from webdriver_manager.firefox import GeckoDriverManager
             from selenium.webdriver.firefox.options import Options
+            from selenium.webdriver.firefox.service import Service
             firefox_options = Options()
             firefox_options.add_argument("--headless")
-            firefox_options.binary_location = GeckoDriverManager().install()
-            browser = webdriver.Firefox(options=firefox_options)
+            firefox_service = Service(executable_path=GeckoDriverManager().install())
+            browser = webdriver.Firefox(service=firefox_service, options=firefox_options)
         else:  # chrome
             from webdriver_manager.chrome import ChromeDriverManager
             from selenium.webdriver.chrome.options import Options
+            from selenium.webdriver.chrome.service import Service
             chrome_options = Options()
             chrome_options.add_argument("--headless")
-            chrome_options.binary_location = ChromeDriverManager().install()
-            browser = webdriver.Chrome(options=chrome_options)
+            chrome_service = Service(executable_path=ChromeDriverManager().install())
+            browser = webdriver.Chrome(service=chrome_service, options=chrome_options)
 
         browser.implicitly_wait(10)  # wait up to 10 seconds while trying to locate elements
 
