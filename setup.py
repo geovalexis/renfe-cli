@@ -27,7 +27,7 @@ setup(
         'html5lib==1.1',
         'selenium==4.1.0',
         'webdriver-manager==4.0.0',
-        'requests==2.27.1'
+        'requests==2.31.0'
     ],
     entry_points="""
         [console_scripts]
