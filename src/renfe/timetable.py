@@ -84,10 +84,11 @@ def get_soup(browser_name: str, origin: str, destination: str, days_from_today: 
     while days_from_today > 0:
         days_from_today = days_from_today - 1
         time.click()
-
-    search_button = browser.find_element_by_css_selector("#contentPage > div > div > div:nth-child(1) > div > div \
-> div > div > div > div > rf-header > rf-header-top > div.rf-header__wrap-search.grid > rf-search \
-> div > div.rf-search__filters.rf-search__filters--open > div.rf-search__wrapper-button > div.rf-search__button")
+    
+    search_button = browser.find_element_by_css_selector("#contentPage > div > div > div:nth-child(1) > div \
+    > div > div > div > div > div > rf-header > rf-header-top > div > div.rf-header__wrap-search.grid.sc-rf-header-top \
+    > rf-search > div > div.rf-search__filters.rf-search__filters--open > div.rf-search__wrapper-button > \
+    div.rf-search__button > form > rf-button > div > div > button > div.mdc-button__touch.sc-rf-button")
     search_button.click()
 
     sleep(search_timeout)
