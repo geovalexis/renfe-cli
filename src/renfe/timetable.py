@@ -7,7 +7,6 @@ from selenium import webdriver
 from time import sleep
 from selenium.webdriver.firefox.webdriver import WebDriver as Firefox
 from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
-from selenium.common.exceptions import NoSuchElementException
 
 os.environ['WDM_LOG_LEVEL'] = '0'
 
@@ -16,9 +15,9 @@ def get_timetable(
         origin: str,
         destination: str,
         days_from_today: int = 0,
-        browser: str = "firefox",
+        browser_name: str = "firefox",
         search_timeout: int = 3) -> List[dict]:
-    soup = get_soup(browser, origin, destination, days_from_today, search_timeout)
+    soup = get_soup(browser_name, origin, destination, days_from_today, search_timeout)
     types = get_types(soup)
     durations = get_durations(soup)
     departures = get_departures(soup)
@@ -55,17 +54,11 @@ def get_browser(type: str) -> Union[Firefox, Chrome]:
     return browser
 
 
-def get_soup(browser: str, origin: str, destination: str, days_from_today: int, search_timeout: int) -> BeautifulSoup:
-    browser = get_browser(browser)
+def get_soup(browser_name: str, origin: str, destination: str, days_from_today: int, search_timeout: int) -> BeautifulSoup:
+    browser = get_browser(browser_name)
     browser.get("https://www.renfe.com/es/es")
 
     sleep(1)
-
-    # NOTE: temporal solution to avoid popup window
-    try:
-        browser.find_element_by_css_selector("i.rf-ico.icon-close.sc-rf-modal-score").click()
-    except NoSuchElementException:
-        pass
 
     origin_input = browser.find_element_by_css_selector("rf-awesomplete.rf-input-autocomplete:nth-child(1) \
 > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
@@ -91,10 +84,11 @@ def get_soup(browser: str, origin: str, destination: str, days_from_today: int, 
     while days_from_today > 0:
         days_from_today = days_from_today - 1
         time.click()
-
-    search_button = browser.find_element_by_css_selector("#contentPage > div > div > div:nth-child(1) > div > div \
-> div > div > div > div > rf-header > rf-header-top > div.rf-header__wrap-search.grid > rf-search \
-> div > div.rf-search__filters.rf-search__filters--open > div.rf-search__wrapper-button > div.rf-search__button")
+    
+    search_button = browser.find_element_by_css_selector("#contentPage > div > div > div:nth-child(1) > div \
+    > div > div > div > div > div > rf-header > rf-header-top > div > div.rf-header__wrap-search.grid.sc-rf-header-top \
+    > rf-search > div > div.rf-search__filters.rf-search__filters--open > div.rf-search__wrapper-button > \
+    div.rf-search__button > form > rf-button > div > div > button > div.mdc-button__touch.sc-rf-button")
     search_button.click()
 
     sleep(search_timeout)
