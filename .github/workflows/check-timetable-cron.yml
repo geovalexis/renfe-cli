@@ -5,8 +5,8 @@ name: "Check timetable for a given route"
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '25 */12 * * *'
+  # schedule:
+  #   - cron: '25 */12 * * *'
 
 jobs:
   get_timetable:
@@ -18,7 +18,7 @@ jobs:
           - date: "2023-04-21"
             origin: VALEN
             destination: BARCE
-            toemail: "anna.samarra@gmail.com"
+            toemail: "youremail@gmail.com"
             minTrips: 2
 
     steps:
