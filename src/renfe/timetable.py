@@ -15,9 +15,9 @@ def get_timetable(
         origin: str,
         destination: str,
         days_from_today: int = 0,
-        browser: str = "firefox",
+        browser_name: str = "firefox",
         search_timeout: int = 3) -> List[dict]:
-    soup = get_soup(browser, origin, destination, days_from_today, search_timeout)
+    soup = get_soup(browser_name, origin, destination, days_from_today, search_timeout)
     types = get_types(soup)
     durations = get_durations(soup)
     departures = get_departures(soup)
@@ -54,8 +54,8 @@ def get_browser(type: str) -> Union[Firefox, Chrome]:
     return browser
 
 
-def get_soup(browser: str, origin: str, destination: str, days_from_today: int, search_timeout: int) -> BeautifulSoup:
-    browser = get_browser(browser)
+def get_soup(browser_name: str, origin: str, destination: str, days_from_today: int, search_timeout: int) -> BeautifulSoup:
+    browser = get_browser(browser_name)
     browser.get("https://www.renfe.com/es/es")
 
     sleep(1)
