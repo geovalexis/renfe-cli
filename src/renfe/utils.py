@@ -106,7 +106,7 @@ def parse_args(config):
     options, _ = p.parse_args()
 
     if (options.days is None) and (options.date is None):
-        p.error("you should specify either the days to the trip or the date, at least one of them!")
+        options.days = 0
 
     if (options.days is not None) and (options.date is not None):
         p.error("you should specify either the days or the date, not both.")

@@ -31,7 +31,7 @@ def main():
             print(colorama.Fore.GREEN + f"Searching timetable for date: {options.date or get_date(int(options.days))}")
             print(colorama.Fore.GREEN + f"From {origin_name} to {destination_name}" + colorama.Fore.RESET)
             print(colorama.Fore.GREEN + "Be patient, navigating through renfe site now..." + colorama.Fore.RESET)
-            days = options.days or get_days(options.date)
+            days = options.days if options.days is not None else get_days(options.date)
             times = get_timetable(
                 origin_name,
                 destination_name,
