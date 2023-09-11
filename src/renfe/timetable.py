@@ -57,7 +57,7 @@ def get_soup(browser_name: str, origin: str, destination: str, days_from_today: 
     browser = get_browser(browser_name)
     browser.get("https://www.renfe.com/es/es")
 
-    sleep(1)
+    sleep(3)
 
     origin_input = browser.find_element(By.CSS_SELECTOR, "rf-awesomplete.rf-input-autocomplete:nth-child(1) \
 > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
