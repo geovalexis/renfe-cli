@@ -5,6 +5,7 @@ from typing import List, Union
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from time import sleep
+from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver as Firefox
 from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
 
@@ -36,15 +37,19 @@ def get_browser(type: str) -> Union[Firefox, Chrome]:
         if type == "firefox":
             from webdriver_manager.firefox import GeckoDriverManager
             from selenium.webdriver.firefox.options import Options
+            from selenium.webdriver.firefox.service import Service
             firefox_options = Options()
             firefox_options.add_argument("--headless")
-            browser = webdriver.Firefox(executable_path=GeckoDriverManager().install(), options=firefox_options)
+            firefox_service = Service(executable_path=GeckoDriverManager().install())
+            browser = webdriver.Firefox(service=firefox_service, options=firefox_options)
         else:  # chrome
             from webdriver_manager.chrome import ChromeDriverManager
             from selenium.webdriver.chrome.options import Options
+            from selenium.webdriver.chrome.service import Service
             chrome_options = Options()
             chrome_options.add_argument("--headless")
-            browser = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=chrome_options)
+            chrome_service = Service(executable_path=ChromeDriverManager().install())
+            browser = webdriver.Chrome(service=chrome_service, options=chrome_options)
 
         browser.implicitly_wait(10)  # wait up to 10 seconds while trying to locate elements
 
@@ -58,34 +63,34 @@ def get_soup(browser_name: str, origin: str, destination: str, days_from_today: 
     browser = get_browser(browser_name)
     browser.get("https://www.renfe.com/es/es")
 
-    sleep(1)
+    sleep(3)
 
-    origin_input = browser.find_element_by_css_selector("rf-awesomplete.rf-input-autocomplete:nth-child(1) \
+    origin_input = browser.find_element(By.CSS_SELECTOR, "rf-awesomplete.rf-input-autocomplete:nth-child(1) \
 > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
     origin_input.send_keys(origin)
 
     sleep(0.05)
 
-    origin_option = browser.find_element_by_css_selector("#awesomplete_list_1_item_0")
+    origin_option = browser.find_element(By.CSS_SELECTOR, "#awesomplete_list_1_item_0")
     origin_option.click()
 
-    destination_input = browser.find_element_by_css_selector("rf-awesomplete.rf-input-autocomplete:nth-child(2) \
+    destination_input = browser.find_element(By.CSS_SELECTOR, "rf-awesomplete.rf-input-autocomplete:nth-child(2) \
 > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
     destination_input.send_keys(destination)
 
     sleep(0.05)
 
-    destination_option = browser.find_element_by_css_selector("#awesomplete_list_2_item_0")
+    destination_option = browser.find_element(By.CSS_SELECTOR, "#awesomplete_list_2_item_0")
     destination_option.click()
 
-    time = browser.find_element_by_css_selector("div.rf-daterange__container-ipt:nth-child(2) > div:nth-child(2) \
+    time = browser.find_element(By.CSS_SELECTOR, "div.rf-daterange__container-ipt:nth-child(2) > div:nth-child(2) \
 > button:nth-child(2) > i:nth-child(1)")
 
     while days_from_today > 0:
         days_from_today = days_from_today - 1
         time.click()
     
-    search_button = browser.find_element_by_css_selector("#contentPage > div > div > div:nth-child(1) > div \
+    search_button = browser.find_element(By.CSS_SELECTOR, "#contentPage > div > div > div:nth-child(1) > div \
     > div > div > div > div > div > rf-header > rf-header-top > div > div.rf-header__wrap-search.grid.sc-rf-header-top \
     > rf-search > div > div.rf-search__filters.rf-search__filters--open > div.rf-search__wrapper-button > \
     div.rf-search__button > form > rf-button > div > div > button > div.mdc-button__touch.sc-rf-button")

@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 try:
     from pypandoc import convert_file
@@ -22,13 +22,13 @@ setup(
     py_modules=['renfe-cli'],
     include_package_data=True,
     install_requires=[
-        'setuptools-rust==1.1.2',
-        'setuptools==60.9.3',
+        'setuptools>=60.9.3',
         'beautifulsoup4==4.10.0',
         'html5lib==1.1',
-        'selenium==4.1.0',
+        'selenium==4.12.0',
         'webdriver-manager==4.0.0',
-        'requests==2.27.1'
+        'requests==2.31.0',
+        'colorama>=0.4.6,<1.0',
     ],
     entry_points="""
         [console_scripts]
