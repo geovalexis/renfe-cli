@@ -70,7 +70,7 @@ def main():
             print(colorama.Fore.GREEN + f"Searching stations like: {options.search}")
             stations_infos = get_station_and_key(options.search)
             for station_info in stations_infos:
-                print(colorama.Fore.GREEN + f"{station_info}")
+                print(colorama.Fore.GREEN + f"{station_info.name}: {station_info.id}")
 
             if not stations_infos:
                 print(colorama.Fore.RED + f"Oops! No stations found by key value: {options.search}" + colorama.Fore.RESET)
