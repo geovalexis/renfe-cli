@@ -42,6 +42,8 @@ Options:
                         <possible station name>' in order to search for IDs
   -d DAYS, --days=DAYS  number of days from today to get the timetable
                         (default: 0 - today)
+  --date=DATE, --dt=DATE
+                        date in ISO8601 (YYYY-MM-DD)                        
   -b BROWSER, --browser=BROWSER
                         possible browsers are "firefox" and "chrome" (default:
                         firefox)
@@ -59,6 +61,8 @@ Options:
                         issue with more information
   -u, --update-config   change your origin and destination stations to
                         defaults when loading this flag
+  --output=OUTPUT, --out=OUTPUT
+                        name of the file to save the results to (it would be saved in JSON format)                        
 ```
 
 ### **Searching for IDs of train stations**
