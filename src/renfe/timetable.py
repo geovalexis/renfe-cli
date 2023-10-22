@@ -61,48 +61,43 @@ def get_browser(type: str) -> Union[Firefox, Chrome]:
 
 def get_soup(browser_name: str, origin: str, destination: str, days_from_today: int, search_timeout: int) -> BeautifulSoup:
     browser = get_browser(browser_name)
-    browser.get("https://www.renfe.com/es/es")
+    try:
+        browser.get("https://www.renfe.com/es/es")
+        
+        sleep(3)
 
-    sleep(3)
+        origin_input = browser.find_element(By.CSS_SELECTOR, "input#origin")
+        origin_input.send_keys(origin)
+        sleep(0.05)
+        origin_option = browser.find_element(By.CSS_SELECTOR, "#awesomplete_list_2_item_0")
+        origin_option.click()
 
-    origin_input = browser.find_element(By.CSS_SELECTOR, "rf-awesomplete.rf-input-autocomplete:nth-child(1) \
-> div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
-    origin_input.send_keys(origin)
+        destination_input = browser.find_element(By.CSS_SELECTOR, "input#destination")
+        destination_input.send_keys(destination)
+        sleep(0.05)
+        destination_option = browser.find_element(By.CSS_SELECTOR, "#awesomplete_list_1_item_0")
+        destination_option.click()
 
-    sleep(0.05)
+        time = browser.find_element(By.CSS_SELECTOR, "div.rf-daterange__container-ipt:nth-child(2) > div:nth-child(2) \
+    > button:nth-child(2) > i:nth-child(1)")
 
-    origin_option = browser.find_element(By.CSS_SELECTOR, "#awesomplete_list_1_item_0")
-    origin_option.click()
+        while days_from_today > 0:
+            days_from_today = days_from_today - 1
+            time.click()
+        
+        search_button = browser.find_element(By.CSS_SELECTOR, "#contentPage > div > div > div:nth-child(1) > div \
+        > div > div > div > div > div > rf-header > rf-header-top > div > div.rf-header__wrap-search.grid.sc-rf-header-top \
+        > rf-search > div > div.rf-search__filters.rf-search__filters--open > div.rf-search__wrapper-button > \
+        div.rf-search__button > form > rf-button > div > div > button > div.mdc-button__touch.sc-rf-button")
+        search_button.click()
 
-    destination_input = browser.find_element(By.CSS_SELECTOR, "rf-awesomplete.rf-input-autocomplete:nth-child(2) \
-> div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
-    destination_input.send_keys(destination)
+        sleep(search_timeout)
 
-    sleep(0.05)
+        soup = BeautifulSoup(browser.page_source, 'html.parser')
 
-    destination_option = browser.find_element(By.CSS_SELECTOR, "#awesomplete_list_2_item_0")
-    destination_option.click()
-
-    time = browser.find_element(By.CSS_SELECTOR, "div.rf-daterange__container-ipt:nth-child(2) > div:nth-child(2) \
-> button:nth-child(2) > i:nth-child(1)")
-
-    while days_from_today > 0:
-        days_from_today = days_from_today - 1
-        time.click()
-    
-    search_button = browser.find_element(By.CSS_SELECTOR, "#contentPage > div > div > div:nth-child(1) > div \
-    > div > div > div > div > div > rf-header > rf-header-top > div > div.rf-header__wrap-search.grid.sc-rf-header-top \
-    > rf-search > div > div.rf-search__filters.rf-search__filters--open > div.rf-search__wrapper-button > \
-    div.rf-search__button > form > rf-button > div > div > button > div.mdc-button__touch.sc-rf-button")
-    search_button.click()
-
-    sleep(search_timeout)
-
-    soup = BeautifulSoup(browser.page_source, 'html.parser')
-
-    browser.quit()
-
-    return soup
+        return soup
+    finally:
+        browser.quit()
 
 
 def get_departures(soup) -> List[str]:
