@@ -1,9 +1,8 @@
 from typing import List, Union
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 
 from renfe.models import Station
 from renfe.stations import get_station_and_key
@@ -23,14 +22,21 @@ def is_alive():
     return {"status": "we good!"}
 
 
-@app.get("/stations")
+## Stations CRUD
+stations_router = APIRouter(prefix="/stations", tags=["Stations"])
+
+
+@stations_router.get("")
 def get_stations() -> List[Station]:
     return get_stations_logic()
 
 
-@app.get("/stations/{station_name}")
+@stations_router.get("/{station_name}")
 def get_station(station_name: str) -> List[Station]:
     return get_station_and_key(station_name)
+
+
+app.include_router(stations_router)
 
 
 def main():
