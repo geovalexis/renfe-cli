@@ -9,6 +9,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver as Firefox
 from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
 
+from renfe.models import Timetable
+
 os.environ['WDM_LOG_LEVEL'] = '0'
 
 
@@ -17,7 +19,7 @@ def get_timetable(
         destination: str,
         days_from_today: int = 0,
         browser_name: str = "firefox",
-        search_timeout: int = 3) -> List[dict]:
+        search_timeout: int = 3) -> List[Timetable]:
     soup = get_soup(browser_name, origin, destination, days_from_today, search_timeout)
     types = get_types(soup)
     durations = get_durations(soup)
@@ -26,7 +28,7 @@ def get_timetable(
     prices = get_prices(soup)
 
     return [
-        {"type": t, "departure": de, "arrival": a, "duration": du, "price": p}
+        Timetable(type=t, departure=de, arrival=a, duration=du, prices=p)
         for t, de, a, du, p in zip(types, departures, arrivals, durations, prices)
     ]
 
@@ -69,13 +71,13 @@ def get_soup(browser_name: str, origin: str, destination: str, days_from_today: 
         origin_input = browser.find_element(By.CSS_SELECTOR, "input#origin")
         origin_input.send_keys(origin)
         sleep(0.05)
-        origin_option = browser.find_element(By.CSS_SELECTOR, "#awesomplete_list_2_item_0")
+        origin_option = browser.find_element(By.CSS_SELECTOR, "#awesomplete_list_1_item_0")
         origin_option.click()
 
         destination_input = browser.find_element(By.CSS_SELECTOR, "input#destination")
         destination_input.send_keys(destination)
         sleep(0.05)
-        destination_option = browser.find_element(By.CSS_SELECTOR, "#awesomplete_list_1_item_0")
+        destination_option = browser.find_element(By.CSS_SELECTOR, "#awesomplete_list_2_item_0")
         destination_option.click()
 
         time = browser.find_element(By.CSS_SELECTOR, "div.rf-daterange__container-ipt:nth-child(2) > div:nth-child(2) \

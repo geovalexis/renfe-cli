@@ -32,13 +32,13 @@ def get_station_and_key(search: str) -> List[Station]:
 
 def get_station_name(id: str) -> str:
     for station in get_stations():
-        if id == station['cdgoEstacion']:
-            return station['desgEstacion']
+        if id == station.id:
+            return station.name
     raise RenfeException(f"Station id {id} not found!")
 
 
 def station_exists(id: str) -> bool:
     for station in get_stations():
-        if id == station['cdgoEstacion']:
+        if id == station.id:
             return True
     return False

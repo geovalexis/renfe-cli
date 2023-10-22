@@ -21,7 +21,7 @@ def main():
 
     if options.search == '':
         # print timetable for given origin and to stations for a given date
-        if not (station_exists(options.origin) and (options.to)):
+        if not (station_exists(options.origin) or not station_exists(options.to)):
             logging.error(
                 "Please, provide right values for origin and destination station names")
             exit(1)
@@ -45,7 +45,7 @@ def main():
             for time in times:
                 print(colorama.Fore.GREEN + "--------------------------------------------------------------------------")
                 print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<12} | {:<10} ".format(
-                    time["type"], time["departure"], time["arrival"], time["duration"],  " - ".join(time["price"])))
+                    time.type, time.departure, time.arrival, time.arrival,  " - ".join(time.prices)))
             print(colorama.Fore.GREEN + "==========================================================================" + colorama.Fore.RESET)
 
             if not times:
